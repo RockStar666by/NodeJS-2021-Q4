@@ -16,5 +16,6 @@
     "url": "https://github.com/RockStar666by/NodeJS-2021-Q4/issues"
   },
   "homepage": "https://github.com/RockStar666by/NodeJS-2021-Q4#readme",
-  "type": "module"
+  "type": "module",
+  "dependencies": {}
 }

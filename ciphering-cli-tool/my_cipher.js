@@ -1,3 +1,9 @@
-import { getValue } from './src/get-arguments.js';
+import { argsCheck } from './src/validation.js';
+import { cipher } from './src/streams.js';
 
-getValue();
+process.on('SIGINT', () => {
+  process.exit(1);
+});
+
+argsCheck();
+cipher();
