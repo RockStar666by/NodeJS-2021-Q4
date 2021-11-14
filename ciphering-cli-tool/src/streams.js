@@ -23,7 +23,7 @@ const caesarTransformStream = (coding) =>
         coding === 1
           ? encodeCaesar(chunk.toString().trim())
           : decodeCaesar(chunk.toString().trim());
-      callback(null, changedData);
+      callback(null, changedData + '\n');
     },
   });
 
@@ -34,7 +34,7 @@ const rot8TransformStream = (coding) =>
         coding === 1
           ? encodeROT8(chunk.toString().trim())
           : decodeROT8(chunk.toString().trim());
-      callback(null, changedData);
+      callback(null, changedData + '\n');
     },
   });
 
@@ -42,7 +42,7 @@ const atbashTransformStream = () =>
   new Transform({
     transform(chunk, encoding, callback) {
       const changedData = encodeAtbash(chunk.toString().trim());
-      callback(null, changedData);
+      callback(null, changedData + '\n');
     },
   });
 
@@ -68,17 +68,15 @@ argsArr.forEach((elem) => {
   }
 });
 
-const handleError = () => {
-  console.log('Error in stream');
-  readStream.destroy();
-  writeStream.end('Finish with error...');
-};
-
 const callback1 = (err) => {
   if (err) {
-    console.error('Pipeline failed.', err);
+    console.error(
+      'Pipeline failed! Please, check your input(output) file path!',
+      err
+    );
+    process.exit(9);
   } else {
-    console.log('Pipeline succeeded.');
+    console.log('Pipeline succeeded!');
   }
 };
 

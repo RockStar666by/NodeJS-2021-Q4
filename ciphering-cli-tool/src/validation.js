@@ -9,7 +9,7 @@ const argsCounter = {
 
 if (!argv.includes('-c') && !argv.includes('--config')) {
   stderr.write(
-    'Вы не указали конфигурацию! Попробуйте ещё раз запустить файл с флагом -c или --config'
+    'ERROR: Вы не указали конфигурацию! Попробуйте ещё раз запустить файл с флагом -c или --config'
   );
   exit(9);
 }
@@ -20,7 +20,7 @@ argv.forEach((elem) => {
     case '--config':
       argsCounter.config += 1;
       if (argsCounter.config > 1) {
-        stderr.write('Вы указали конфигурацию несколько раз!');
+        stderr.write('ERROR: Вы указали конфигурацию несколько раз!');
         exit(9);
       }
       break;
@@ -28,7 +28,7 @@ argv.forEach((elem) => {
     case '--input':
       argsCounter.input += 1;
       if (argsCounter.input > 1) {
-        stderr.write('Вы указали файл ввода несколько раз!');
+        stderr.write('ERROR: Вы указали файл ввода несколько раз!');
         exit(9);
       }
       break;
@@ -36,7 +36,7 @@ argv.forEach((elem) => {
     case '--output':
       argsCounter.output += 1;
       if (argsCounter.output > 1) {
-        stderr.write('Вы указали файл вывода несколько раз!');
+        stderr.write('ERROR: Вы указали файл вывода несколько раз!');
         exit(9);
       }
       break;
@@ -46,7 +46,7 @@ argv.forEach((elem) => {
 });
 
 const configNotMatch = () => {
-  stderr.write('Неверный формат конфигурации!');
+  stderr.write('ERROR: Неверный формат конфигурации!');
   exit(9);
 };
 
@@ -57,10 +57,9 @@ export const argsCheck = () => {
 
   args.input
     ? console.log('Input: ' + args.input)
-    : stdin.once('data', (chunk) => {
-        let name = chunk.toString();
-        console.log('Hello, ' + name + '!');
-      });
+    : console.log('Input: process.stdin');
 
-  args.output ? console.log('Output: ' + args.output) : stdin.pipe(stdout);
+  args.output
+    ? console.log('Output: ' + args.output)
+    : console.log('Output: process.stdout');
 };
