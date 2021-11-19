@@ -1,5 +1,4 @@
-import { stdin, stdout, stderr, exit, argv } from 'process';
-import { args } from './parser.js';
+import { stderr, exit, argv } from 'process';
 
 const argsCounter = {
   config: 0,
@@ -50,7 +49,7 @@ const configNotMatch = () => {
   exit(9);
 };
 
-export const argsCheck = () => {
+export const argsCheck = (args) => {
   args.config.match(/^([A]-?|[CR][01]-?)+([A]|[CR][01])$/gm)
     ? console.log('Current config: ' + args.config)
     : configNotMatch();

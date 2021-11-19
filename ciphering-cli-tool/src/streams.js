@@ -16,7 +16,7 @@ const readStream =
 const writeStream =
   args.output !== null ? new WriteCustomStream(args.output) : process.stdout;
 
-const caesarTransformStream = (coding) =>
+export const caesarTransformStream = (coding) =>
   new Transform({
     transform(chunk, encoding, callback) {
       const changedData =
