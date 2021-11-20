@@ -10,7 +10,6 @@ import {
 import { args } from './parser.js';
 
 const transformArr = [];
-const argsArr = args.config.split('-');
 const readStream =
   args.input !== null ? new ReadCustomStream(args.input) : process.stdin;
 const writeStream =
@@ -46,27 +45,30 @@ const atbashTransformStream = () =>
     },
   });
 
-argsArr.forEach((elem) => {
-  switch (elem) {
-    case 'C1':
-      transformArr.push(caesarTransformStream(1));
-      break;
-    case 'C0':
-      transformArr.push(caesarTransformStream(0));
-      break;
-    case 'R1':
-      transformArr.push(rot8TransformStream(1));
-      break;
-    case 'R0':
-      transformArr.push(rot8TransformStream(0));
-      break;
-    case 'A':
-      transformArr.push(atbashTransformStream());
-      break;
-    default:
-      break;
-  }
-});
+export const streamSwitcher = (args) => {
+  const argsArr = args.config.split('-');
+  argsArr.forEach((elem) => {
+    switch (elem) {
+      case 'C1':
+        transformArr.push(caesarTransformStream(1));
+        break;
+      case 'C0':
+        transformArr.push(caesarTransformStream(0));
+        break;
+      case 'R1':
+        transformArr.push(rot8TransformStream(1));
+        break;
+      case 'R0':
+        transformArr.push(rot8TransformStream(0));
+        break;
+      case 'A':
+        transformArr.push(atbashTransformStream());
+        break;
+      default:
+        break;
+    }
+  });
+};
 
 const callback1 = (err) => {
   if (err) {

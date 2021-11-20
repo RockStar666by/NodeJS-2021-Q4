@@ -6,43 +6,48 @@ const argsCounter = {
   output: 0,
 };
 
-if (!argv.includes('-c') && !argv.includes('--config')) {
-  stderr.write(
-    'ERROR: Вы не указали конфигурацию! Попробуйте ещё раз запустить файл с флагом -c или --config'
-  );
-  exit(9);
-}
-
-argv.forEach((elem) => {
-  switch (elem) {
-    case '-c':
-    case '--config':
-      argsCounter.config += 1;
-      if (argsCounter.config > 1) {
-        stderr.write('ERROR: Вы указали конфигурацию несколько раз!');
-        exit(9);
-      }
-      break;
-    case '-i':
-    case '--input':
-      argsCounter.input += 1;
-      if (argsCounter.input > 1) {
-        stderr.write('ERROR: Вы указали файл ввода несколько раз!');
-        exit(9);
-      }
-      break;
-    case '-o':
-    case '--output':
-      argsCounter.output += 1;
-      if (argsCounter.output > 1) {
-        stderr.write('ERROR: Вы указали файл вывода несколько раз!');
-        exit(9);
-      }
-      break;
-    default:
-      break;
+export const configCheck = (argv) => {
+  if (!argv.includes('-c') && !argv.includes('--config')) {
+    stderr.write(
+      'ERROR: Вы не указали конфигурацию! Попробуйте ещё раз запустить файл с флагом -c или --config'
+    );
+    exit(9);
   }
-});
+  return null;
+};
+
+export const repeatCheck = (argv) => {
+  argv.forEach((elem) => {
+    switch (elem) {
+      case '-c':
+      case '--config':
+        argsCounter.config += 1;
+        if (argsCounter.config > 1) {
+          stderr.write('ERROR: Вы указали конфигурацию несколько раз!');
+          exit(9);
+        }
+        break;
+      case '-i':
+      case '--input':
+        argsCounter.input += 1;
+        if (argsCounter.input > 1) {
+          stderr.write('ERROR: Вы указали файл ввода несколько раз!');
+          exit(9);
+        }
+        break;
+      case '-o':
+      case '--output':
+        argsCounter.output += 1;
+        if (argsCounter.output > 1) {
+          stderr.write('ERROR: Вы указали файл вывода несколько раз!');
+          exit(9);
+        }
+        break;
+      default:
+        break;
+    }
+  });
+};
 
 const configNotMatch = () => {
   stderr.write('ERROR: Неверный формат конфигурации!');
