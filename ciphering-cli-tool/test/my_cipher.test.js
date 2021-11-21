@@ -108,26 +108,23 @@ describe('Success Scenarios:  ', () => {
       console.log('Current config: ' + args.config)
     );
   });
-  test('Cipher usage scenarios from first task description', () => {
-    const mockStderr = jest
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => {});
+  test('Cipher usage scenarios from first task description', async () => {
     const argsExample1 = {
       config: 'C1-C1-R0-A',
     };
-    const argsExample2 = {
-      config: 'C1-C0-A-R1-R0-A-R0-R0-C1-A',
-    };
-    const argsExample3 = {
-      config: 'A-A-A-R1-R0-R0-R0-C1-C1-A',
-    };
-    const argsExample4 = {
-      config: 'C1-R1-C0-C0-A-R0-R1-R1-A-C1',
-    };
 
-    const transformArr1 = streamSwitcher(argsExample1);
+    const transformArr = streamSwitcher(argsExample1);
+    let testStr = 'ABC';
 
-    expect(mockStderr).toHaveBeenCalledWith('');
+    transformArr[0].write(testStr);
+
+    await expect(
+      new Promise((resolve) => {
+        transformArr[0].on('data', (data) => {
+          resolve(data.toString('utf8'));
+        });
+      })
+    ).resolves.toBe('BCD\n');
   });
 });
 
