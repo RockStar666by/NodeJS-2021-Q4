@@ -1,1 +1,11 @@
-# NodeJS-2021-Q4
+# Task 2. Testing
+
+
+### To start testing you should enter in terminal:
+>
+> `npm run test:coverage`
+
+
+
+
+

@@ -1,0 +1,37 @@
+{
+  "name": "nodejs-2021-q4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RockStar666by/NodeJS-2021-Q4.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RockStar666by/NodeJS-2021-Q4/issues"
+  },
+  "homepage": "https://github.com/RockStar666by/NodeJS-2021-Q4#readme",
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
+    "jest": "^27.3.1"
+  },
+  "type": "module",
+  "dependencies": {
+    "@types/jest": "^27.0.2"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
+  }
+}
