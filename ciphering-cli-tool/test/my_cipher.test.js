@@ -7,7 +7,14 @@ import {
 } from '../src/ciphering.js';
 import { getValue } from '../src/parser.js';
 import { configCheck, repeatCheck, argsCheck } from '../src/validation.js';
-import { cipher, streamSwitcher } from '../src/streams.js';
+import {
+  cipher,
+  streamSwitcher,
+  readStream,
+  writeStream,
+  callback1,
+} from '../src/streams.js';
+import * as fs from 'fs';
 
 const testLatinSymbols = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const testOtherSymbols =
@@ -43,19 +50,46 @@ describe('Error Scenarios: ', () => {
   });
 
   test('User passes incorrent symbols in argument for --config', () => {
-    const args = {
-      config: 'config',
-      input: 'input',
-      output: 'output',
-    };
     const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
     const mockStderr = jest
       .spyOn(process.stderr, 'write')
       .mockImplementation(() => {});
-    argsCheck(args);
+    argsCheck({
+      config: 'C1-C2',
+    });
     expect(mockExit).toHaveBeenCalledWith(9);
     expect(mockStderr).toHaveBeenCalledWith(
       'ERROR: Неверный формат конфигурации!'
+    );
+  });
+
+  test("User passes -i argument with path that doesn't exist or with no read access", () => {
+    const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
+    const mockStderr = jest
+      .spyOn(process.stderr, 'write')
+      .mockImplementation(() => {});
+    argsCheck({
+      config: 'C1-C1',
+      input: './dsgsdffg',
+    });
+    expect(mockExit).toHaveBeenCalledWith(9);
+    expect(mockStderr).toHaveBeenCalledWith(
+      'ERROR: Неверный путь к файлу ввода (-i)!'
+    );
+  });
+
+  test("User passes -o argument with path to directory that doesn't exist or with no read access", () => {
+    const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {});
+    const mockStderr = jest
+      .spyOn(process.stderr, 'write')
+      .mockImplementation(() => {});
+    argsCheck({
+      config: 'C1-C1',
+      output: './dsgsdffg',
+    });
+    expect(mockExit).toHaveBeenCalledWith(9);
+    expect(mockStderr).toHaveBeenCalledWith(
+      'ERROR: Неверный путь к файлу вывода (-o)!'
     );
   });
 });
@@ -75,17 +109,25 @@ describe('Success Scenarios:  ', () => {
     );
   });
   test('Cipher usage scenarios from first task description', () => {
-    const args = {
-      config: 'C1-C1',
-      input: 'input',
-      output: 'output',
+    const mockStderr = jest
+      .spyOn(process.stdout, 'write')
+      .mockImplementation(() => {});
+    const argsExample1 = {
+      config: 'C1-C1-R0-A',
     };
-    expect(
-      configCheck(['-c', 'C1-C1', '-i', './input.txt', '-o', './output.txt'])
-    ).toEqual(null);
-    expect(argsCheck(args)).toEqual(
-      console.log('Current config: ' + args.config)
-    );
+    const argsExample2 = {
+      config: 'C1-C0-A-R1-R0-A-R0-R0-C1-A',
+    };
+    const argsExample3 = {
+      config: 'A-A-A-R1-R0-R0-R0-C1-C1-A',
+    };
+    const argsExample4 = {
+      config: 'C1-R1-C0-C0-A-R0-R1-R1-A-C1',
+    };
+
+    const transformArr1 = streamSwitcher(argsExample1);
+
+    expect(mockStderr).toHaveBeenCalledWith('');
   });
 });
 

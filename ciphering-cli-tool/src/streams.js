@@ -7,13 +7,16 @@ import {
   decodeCaesar,
   decodeROT8,
 } from './ciphering.js';
-import { args } from './parser.js';
 
-const transformArr = [];
-const readStream =
-  args.input !== null ? new ReadCustomStream(args.input) : process.stdin;
-const writeStream =
-  args.output !== null ? new WriteCustomStream(args.output) : process.stdout;
+export const readStream = (args) => {
+  return args.input !== null ? new ReadCustomStream(args.input) : process.stdin;
+};
+
+export const writeStream = (args) => {
+  return args.output !== null
+    ? new WriteCustomStream(args.output)
+    : process.stdout;
+};
 
 export const caesarTransformStream = (coding) =>
   new Transform({
@@ -46,6 +49,7 @@ const atbashTransformStream = () =>
   });
 
 export const streamSwitcher = (args) => {
+  const transformArr = [];
   const argsArr = args.config.split('-');
   argsArr.forEach((elem) => {
     switch (elem) {
@@ -68,9 +72,10 @@ export const streamSwitcher = (args) => {
         break;
     }
   });
+  return transformArr;
 };
 
-const callback1 = (err) => {
+export const callback1 = (err) => {
   if (err) {
     console.error(
       'Pipeline failed! Please, check your input(output) file path!',
@@ -82,6 +87,6 @@ const callback1 = (err) => {
   }
 };
 
-export const cipher = () => {
+export const cipher = (readStream, transformArr, writeStream, callback1) => {
   pipeline(readStream, ...transformArr, writeStream, callback1);
 };

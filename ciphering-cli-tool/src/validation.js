@@ -1,4 +1,5 @@
 import { stderr, exit, argv } from 'process';
+import * as fs from 'fs';
 
 const argsCounter = {
   config: 0,
@@ -54,16 +55,33 @@ const configNotMatch = () => {
   exit(9);
 };
 
+const inputNotMatch = () => {
+  stderr.write('ERROR: Неверный путь к файлу ввода (-i)!');
+  exit(9);
+};
+
+const outputNotMatch = () => {
+  stderr.write('ERROR: Неверный путь к файлу вывода (-o)!');
+  exit(9);
+};
+
 export const argsCheck = (args) => {
+  if (args.input === undefined) inputNotMatch();
+  if (args.output === undefined) outputNotMatch();
+
   args.config.match(/^([A]-?|[CR][01]-?)+([A]|[CR][01])$/gm)
     ? console.log('Current config: ' + args.config)
     : configNotMatch();
 
   args.input
-    ? console.log('Input: ' + args.input)
+    ? fs.existsSync(args.input)
+      ? console.log('Input: ' + args.input)
+      : inputNotMatch()
     : console.log('Input: process.stdin');
 
   args.output
-    ? console.log('Output: ' + args.output)
+    ? fs.existsSync(args.output)
+      ? console.log('Output: ' + args.output)
+      : outputNotMatch()
     : console.log('Output: process.stdout');
 };
